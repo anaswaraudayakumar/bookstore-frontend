@@ -2,7 +2,10 @@ import React, { useState } from 'react'
 import Header from '../components/Header'
 import Footer from '../../components/Footer'
 import { FaCircleCheck } from 'react-icons/fa6'
-
+import BookStatus from '../components/BookStatus'
+import Purchase from '../components/Purchase'
+import UploadBook from '../components/UploadBook'
+import Edit from '../components/Edit'
 function Profile() {
   const [currentTab,setCurrentTab] = useState(1)
   return (
@@ -17,7 +20,7 @@ function Profile() {
         <h1 className="font-black md:text-3xl text-2xl">Username</h1>
         <FaCircleCheck className='text-blue-400 ms-3'/>
       </div>
-      edit
+      <Edit/>
     </div>
     <p className='text-justify md:px-20 px-5 my-5'>This is your personal space where you can manage your account, explore your reading activity, track your orders, and save books you love. Whether you're building a wishlist, discovering new arrivals, or reviewing your recent purchases, this page keeps everything organized and easy to access. Your reading journey continues here — enjoy exploring, discovering, and collecting stories that inspire you. ✨
     
@@ -30,9 +33,9 @@ function Profile() {
       <p onClick={()=>setCurrentTab(3)}  className={currentTab==3?'p-4 border-gray-200 border-l border-t border-r rounded  cursor-pointer':'p-4 border-gray-200 border-b rounded  cursor-pointer'}> History</p>
       </div>
       {/* tab contents */}
-      {currentTab==1 && <div>Upload book</div>}
-      {currentTab==2 && <div>Upload book status</div>}
-      {currentTab==3 && <div>Purchase History</div>}
+      {currentTab==1 && <div><UploadBook/></div>}
+      {currentTab==2 && <div><BookStatus/></div>}
+      {currentTab==3 && <div><Purchase/></div>}
     </div>
     <Footer/>
     </>

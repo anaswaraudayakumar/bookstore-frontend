@@ -1,8 +1,16 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
+
 
 function Pnf() {
   return (
-    <div>Pnf</div>
+     <div  className='min-h-screen flex justify-center items-center flex-col'>
+      <img className='w-100' src="https://cdn.dribbble.com/userupload/25152143/file/original-19d00f0b43ff1449812b30a9635aaf5d.gif" alt="pgntfnd" />
+      <p>Oh No!</p>
+      <h3 className='text-2xl font-medium'>Look Like You're LOst</h3>
+      <p>The page you are looking for is not available</p>
+      <Link to={'/'} className="bg-black mt-5 px-3 py-2 text-white">Home</Link>
+    </div>
   )
 }
 

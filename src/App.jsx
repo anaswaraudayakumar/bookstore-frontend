@@ -47,7 +47,7 @@ function App() {
       <Route  path='/admin/resources' element={<AdminResource/>} />
       <Route  path='/admin/settings' element={<AdminSettings/>} />
 
-      <Route path='/' element={<Pnf/>}/>
+      <Route path='/*' element={<Pnf/>}/>
 
 
 

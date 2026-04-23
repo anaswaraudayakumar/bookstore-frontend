@@ -1,0 +1,7 @@
+import apiService from "../api/apiService";
+
+//register api : called by authentication component when register btn clicked 
+export const registerAPI = async (userData)=>{
+    return await apiService("POST","/register",userData) 
+    // we didnt give reqHeader bcz defaultly header is json so it is same if didnt give
+}
