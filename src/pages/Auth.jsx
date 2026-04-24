@@ -3,35 +3,69 @@ import { FaEye, FaEyeSlash, FaUser } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 import { useFormik } from "formik";
 import * as Yup from 'yup'
-import { registerAPI } from '../services/allAPI';
+import { loginAPI, registerAPI } from '../services/allAPI';
+import { useNavigate } from 'react-router-dom';
+ import { ToastContainer, toast } from 'react-toastify';
+
 function Auth({insideRegister}) {
+  const navigate =useNavigate()
   const[togglePassWordType,setTogglePasswordType] = useState(false)
   const formik = useFormik({
     initialValues:{
-      username:"",
+      username:"UserName",
       email:"",
       password:""
     },
     validationSchema: Yup.object({
-      username:Yup.string().min(3,"Must be atleast 3 charecters").required("Required"),
-      email:Yup.string().email("Invalid email").required("Required"),
-      password:Yup.string().required("Required")
+      username:Yup.string().min(3,"Must be atleast 3 charecters").required("Username Required"),
+      email:Yup.string().email("Invalid email").required("Email Required"),
+      password:Yup.string().required("Password Required")
     }),
-    onSubmit:(values)=>{
+    // we use resetform object for empty the inputs
+    onSubmit:(values,{resetForm})=>{
       console.log(values);
       if(insideRegister){
         console.log("register API call");
         handleRegister(values)
       }else{
         console.log("Login api call");
-        
+        handleLogin(values)
       }
+      resetForm()
     }
   })
   //function for api call register 
   const handleRegister = async(userData)=>{
     const result = await registerAPI(userData)
     console.log(result);
+    if(result.status==201){
+      toast.success("Succesfully Registerd.... Please Login")
+    }else{
+      toast.error(result.response)
+    }
+    navigate('/login')
+
+  }
+
+  //function for api call login
+
+  const handleLogin = async (userData)=>{
+    const result = await loginAPI(userData)
+    console.log(result);
+    if(result.status==200){
+      toast.success("Login Successfull..")
+      sessionStorage.setItem("token",result.data.token)
+      sessionStorage.setItem("user",JSON.stringify(result.data.user))
+      setTimeout(() => {
+        if(result.data.user.role =="admin"){
+          navigate('/admin')
+        }else{
+          navigate('/')
+        }
+      }, 2500);
+    }else{
+      toast.error(result.response)
+    }
     
   }
 
@@ -83,7 +117,7 @@ function Auth({insideRegister}) {
                         insideRegister?
                         <button type='submit' className="bg-green-700 p-2 w-full rounded">Register</button>
                         :
-                        <button className="bg-green-700 p-2 w-full rounded">Login</button>
+                        <button type='submit' className="bg-green-700 p-2 w-full rounded">Login</button>
 
                        }
               </div>
@@ -107,6 +141,8 @@ function Auth({insideRegister}) {
             </form>
           </div>
         </div>
+        {/* toast */}
+        <ToastContainer position='top-center' theme='colored' autoClose={3000} />
       </div>
     </div>
   )
