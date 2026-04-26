@@ -1,9 +1,23 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FaBars, FaFacebook, FaFacebookSquare, FaInstagram, FaTwitter, FaUser } from "react-icons/fa"
 import { Link } from 'react-router-dom'
 
 function Header() {
   const [toggle,setToggle]= useState(false)
+  const [token,setToken] = useState("")
+  const [dp,setDp] =useState("")
+
+useEffect ( ()=>{
+  if (sessionStorage.getItem("token") && sessionStorage.getItem("user")){
+    const userToken = sessionStorage.getItem("token")
+    const user = JSON.parse(sessionStorage.getItem("user"))
+    setToken(userToken)
+    setDp(user.picture)
+  }
+}
+
+)
+
   return (
     <>
       {/* Header top part */}
@@ -23,8 +37,20 @@ function Header() {
           <FaInstagram/>
           <FaTwitter className='mx-1'/>
           <FaFacebookSquare/>
-          <Link to ={'/login'} className='border border-black rounded px-3 py-2 ms-3 flex items-center hover:bg-black hover:text-white '><FaUser className='me-1'/>Login
+          {/* login link */}
+          {
+            !token?
+            <Link to ={'/login'} className='border border-black rounded px-3 py-2 ms-3 flex items-center hover:bg-black hover:text-white '><FaUser className='me-1'/>Login
           </Link>
+          :
+          <div>
+            {/* profile icon */}
+            <button className="shadow-sm rounded ms-5 p-1 hover:bg-gray-100">
+              <img width={'40px'} height={'40px'} style={{borderRadius:"50%"}} src={dp==""?"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png":dp} alt="profile icon" />
+            </button>
+            {/* dropdown menu */}
+          </div>
+          }
           
         </div>
       </div>

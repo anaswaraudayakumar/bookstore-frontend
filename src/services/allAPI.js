@@ -11,3 +11,8 @@ export const loginAPI = async (userData)=>{
     return await apiService("POST","/login",userData) 
     // we didnt give reqHeader bcz defaultly header is json so it is same if didnt give
 }
+
+//google-login api :called by auth component when google login clicked 
+export const googleloginAPI = async (userData)=>{
+    return await apiService("POST","/google-login",userData)
+}
