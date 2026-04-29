@@ -1,22 +1,27 @@
 import React, { useEffect, useState } from 'react'
-import { FaBars, FaFacebook, FaFacebookSquare, FaInstagram, FaTwitter, FaUser } from "react-icons/fa"
+import { FaBars, FaFacebook, FaFacebookSquare, FaInstagram, FaTwitter, FaUser, FaPowerOff } from "react-icons/fa"
+import { FaGear } from "react-icons/fa6";
 import { Link } from 'react-router-dom'
+import axiosInstance from '../../api/axiosInstance';
 
 function Header() {
-  const [toggle,setToggle]= useState(false)
-  const [token,setToken] = useState("")
-  const [dp,setDp] =useState("")
+  const [toggle, setToggle] = useState(false)
+  const [token, setToken] = useState("")
+  const [dp, setDp] = useState("")
+  const [userId, setUserId] = useState("")
+  const [dropDown, setDropDown] = useState(false)
 
-useEffect ( ()=>{
-  if (sessionStorage.getItem("token") && sessionStorage.getItem("user")){
-    const userToken = sessionStorage.getItem("token")
-    const user = JSON.parse(sessionStorage.getItem("user"))
-    setToken(userToken)
-    setDp(user.picture)
-  }
-}
+  useEffect(() => {
+    if (sessionStorage.getItem("token") && sessionStorage.getItem("user")) {
+      const userToken = sessionStorage.getItem("token")
+      const user = JSON.parse(sessionStorage.getItem("user"))
+      setToken(userToken)
+      setDp(user?.picture)
+      setUserId(user?._id)
+    }
+  }, [token]
 
-)
+  )
 
   return (
     <>
@@ -24,7 +29,7 @@ useEffect ( ()=>{
       <div className="grid grid-cols-3 p-3">
         {/* logo */}
         <div className='flex items-center'>
-          <img width= {'50px'} height={'50px'} src="https://static.scientificamerican.com/sciam/cache/file/1DDFE633-2B85-468D-B28D05ADAE7D1AD8_source.jpg?w=1200" alt="golo" />
+          <img width={'50px'} height={'50px'} src="https://static.scientificamerican.com/sciam/cache/file/1DDFE633-2B85-468D-B28D05ADAE7D1AD8_source.jpg?w=1200" alt="golo" />
           <h1 className='text-2xl font-bold ms-2 md:hidden'>BOOKSTORE</h1>
 
         </div>
@@ -34,38 +39,71 @@ useEffect ( ()=>{
         </div>
         {/* Login*/}
         <div className='md:flex items-center justify-end hidden'>
-          <FaInstagram/>
-          <FaTwitter className='mx-1'/>
-          <FaFacebookSquare/>
+          <FaInstagram />
+          <FaTwitter className='mx-1' />
+          <FaFacebookSquare />
           {/* login link */}
           {
-            !token?
-            <Link to ={'/login'} className='border border-black rounded px-3 py-2 ms-3 flex items-center hover:bg-black hover:text-white '><FaUser className='me-1'/>Login
-          </Link>
-          :
-          <div>
-            {/* profile icon */}
-            <button className="shadow-sm rounded ms-5 p-1 hover:bg-gray-100">
-              <img width={'40px'} height={'40px'} style={{borderRadius:"50%"}} src={dp==""?"https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png":dp} alt="profile icon" />
-            </button>
-            {/* dropdown menu */}
-          </div>
+            !token ?
+              <Link to={'/login'} className='border border-black rounded px-3 py-2 ms-3 flex items-center hover:bg-black hover:text-white '><FaUser className='me-1' />Login
+              </Link>
+              :
+              <div>
+                {/* profile icon */}
+                <button onClick={() => setDropDown(!dropDown)} className="shadow-sm rounded ms-5 p-1 hover:bg-gray-100">
+                  <img width={'40px'} height={'40px'} style={{ borderRadius: "50%" }} src={dp == "" ? "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" : dp.startsWith("https://lh3.googleusercontent.com/")?dp:`${axiosInstance.defaults.baseURL}/uploads/${dp}`  } alt="profile icon" />
+                </button>
+                {/* dropdown menu */}
+                {
+                  dropDown &&
+                  <div className="absolute right-0 z-10 mt-2 w-40 bg-white shadow rounded ring-1 p-2 ring-black/5 focus:outline-hidden">
+                    {/* profile link */}
+                    <Link to={`/profile/${userId}`} className='flex items-center text-sm  text-gray-600 px-3 py-2'>  <FaGear className='me-1' /> Proflie</Link>
+                    {/* DropDown logout button */}
+                    <button className='flex items-center text-sm  text-gray-600 px-3 py-2'> <FaPowerOff /> Logout</button>
+
+                  </div>
+                }
+              </div>
           }
-          
+
         </div>
       </div>
       {/* navigation Part  */}
       <nav className='bg-black w-full p-3 text-white md:flex justify-center items-center'>
         {/* menu &login @small screen  */}
         <div className='flex justify-between items-center  text-2xl md:hidden'>
-          <button onClick={()=>setToggle(!toggle)}>
-            <FaBars/>
+          <button onClick={() => setToggle(!toggle)}>
+            <FaBars />
           </button>
-           <Link to ={'/login'} className='border border-black rounded px-3 py-2 ms-3 flex items-center hover:bg-black hover:text-white '><FaUser className='me-1'/>Login
-          </Link>
+          {/* login link */}
+          {
+            !token ?
+              <Link to={'/login'} className='border border-black rounded px-3 py-2 ms-3 flex items-center hover:bg-black hover:text-white '><FaUser className='me-1' />Login
+              </Link>
+              :
+              <div>
+                {/* profile icon */}
+                <button onClick={() => setDropDown(!dropDown)} className="shadow-sm rounded ms-5 p-1 hover:bg-gray-100">
+                  <img width={'40px'} height={'40px'} style={{ borderRadius: "50%" }} src={dp == "" ? "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png" : dp} alt="profile icon" />
+                </button>
+                {/* dropdown menu */}
+                {
+                  dropDown &&
+                  <div className="absolute right-0 z-10 mt-2 w-40 bg-white shadow rounded ring-1 p-2 ring-black/5 focus:outline-hidden">
+                    {/* profile link */}
+                    <Link to={`/profile/${userId}`} className='flex items-center text-sm  text-gray-600 px-3 py-2'>  <FaGear className='me-1' /> Proflie</Link>
+                    {/* DropDown logout button */}
+                    <button className='flex items-center text-sm  text-gray-600 px-3 py-2'> <FaPowerOff /> Logout</button>
+
+                  </div>
+                }
+              </div>
+          }
+
 
         </div>
-        <ul className={toggle?'flex flex-col ':'md:flex hidden'}>
+        <ul className={toggle ? 'flex flex-col ' : 'md:flex hidden'}>
           <li><Link to={'/'} className='md:mx-4 mt-2 md:mt-0'>HOME</Link></li>
           <li><Link to={'/books'} className='md:mx-4 mt-2 md:mt-0'>BOOKS</Link></li>
           <li><Link to={'/contact'} className='md:mx-4 mt-2 md:mt-0'>CONTACT</Link></li>
