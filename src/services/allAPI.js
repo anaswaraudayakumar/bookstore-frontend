@@ -26,3 +26,8 @@ export const userUpdateAPI = async (userId,userData)=>{
 export const addBookAPI = async (bookDetails)=>{
     return await apiService("POST",`/books`,bookDetails)
 }
+
+//getHome books api : called by home component when page opens http://localhost:3000/home-books
+export const getHomePageBooksAPI = async ()=>{
+    return await apiService("GET",`/home-books`,{})
+}
